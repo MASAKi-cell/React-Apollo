@@ -1,5 +1,5 @@
-const { DataSource } = require('apollo-datasource');
-const isEmail = require('isemail');
+const { DataSource } = require("apollo-datasource");
+const isEmail = require("isemail");
 
 class UserAPI extends DataSource {
   constructor({ store }) {
@@ -8,7 +8,7 @@ class UserAPI extends DataSource {
   }
 
   /**
-   * This function gets called with the datasource config 
+   * This function gets called with the datasource config
    * including things like caches and context（ユーザー情報を取得する為のリクエスト内容を含む）
    */
   initialize(config) {
@@ -16,15 +16,18 @@ class UserAPI extends DataSource {
   }
 
   /**
-   * User can be called with an argument that includes email, but it doesn't
-   * have to be. If the user is already on the context, it will use that user
-   * instead
+   * email情報からデータベースのユーザー情報を取得もしくは新たにユーザー情報を作成
+   * @param {*} param0
+   * @returns ユーザー情報
    */
   async findOrCreateUser({ email: emailArg } = {}) {
     const email =
       this.context && this.context.user ? this.context.user.email : emailArg;
-    if (!email || !isEmail.validate(email)) return null;
+    if (!email || !isEmail.validate(email)) {
+      return null;
+    }
 
+    // 既存のユーザー情報を検索するか、新たに作成する。
     const users = await this.store.users.findOrCreate({ where: { email } });
     return users && users[0] ? users[0] : null;
   }
@@ -64,7 +67,7 @@ class UserAPI extends DataSource {
       where: { userId },
     });
     return found && found.length
-      ? found.map(l => l.dataValues.launchId).filter(l => !!l)
+      ? found.map((l) => l.dataValues.launchId).filter((l) => !!l)
       : [];
   }
 
