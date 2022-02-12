@@ -27,27 +27,39 @@ class UserAPI extends DataSource {
       return null;
     }
 
-    // 既存のユーザー情報を検索するか、新たに作成する。
+    // 既存のユーザー情報を検索するもしくは、新たに作成。
     const users = await this.store.users.findOrCreate({ where: { email } });
     return users && users[0] ? users[0] : null;
   }
 
+  /**
+   * launchIds配列を受け取り、result配列に格納する。
+   * @params launchIds
+   * @return results
+   */
   async bookTrips({ launchIds }) {
     const userId = this.context.user.id;
-    if (!userId) return;
+
+    if (!userId) {
+      return;
+    }
 
     let results = [];
 
-    // for each launch id, try to book the trip and add it to the results array
-    // if successful
     for (const launchId of launchIds) {
       const res = await this.bookTrip({ launchId });
-      if (res) results.push(res);
+      if (res) {
+        results.push(res);
+      }
     }
-
     return results;
   }
 
+  /**
+   *
+   * @param {*} param0
+   * @returns res or false
+   */
   async bookTrip({ launchId }) {
     const userId = this.context.user.id;
     const res = await this.store.trips.findOrCreate({
@@ -56,11 +68,20 @@ class UserAPI extends DataSource {
     return res && res.length ? res[0].get() : false;
   }
 
+  /**
+   * 予約キャンセルを実施
+   * @param {*} param0
+   * @returns
+   */
   async cancelTrip({ launchId }) {
     const userId = this.context.user.id;
     return !!this.store.trips.destroy({ where: { userId, launchId } });
   }
 
+  /**
+   * ログインユーザーの全ての発射予約状況を表示
+   * @returns
+   */
   async getLaunchIdsByUser() {
     const userId = this.context.user.id;
     const found = await this.store.trips.findAll({
@@ -71,8 +92,16 @@ class UserAPI extends DataSource {
       : [];
   }
 
+  /**
+   * ログインユーザーが予約した便を表示する。
+   * @param {*} param0 
+   * @returns 
+   */
   async isBookedOnLaunch({ launchId }) {
-    if (!this.context || !this.context.user) return false;
+    if (!this.context || !this.context.user) {
+      return false;
+    }
+
     const userId = this.context.user.id;
     const found = await this.store.trips.findAll({
       where: { userId, launchId },
