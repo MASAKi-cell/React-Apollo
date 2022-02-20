@@ -1,41 +1,40 @@
 const { gql } = require("apollo-server");
 
 const typeDefs = gql`
-
   # 発射情報、ユーザー情報のデータを取得
   type Query {
-    launches: [Launch]!
+    launches(pageSize: Int, after: String): LaunchConnection!
     launch(id: ID!): Launch
     me: User
   }
 
   # 発射予定情報を格納
   type Launch {
-      id: ID!
-      site: String
-      mission: Mission
-      rocket: Rocket
-      isBooked: Boolean!
+    id: ID!
+    site: String
+    mission: Mission
+    rocket: Rocket
+    isBooked: Boolean!
   }
 
   # ロケット情報
   type Rocket {
-      id: ID!
-      name: String
-      type: String
+    id: ID!
+    name: String
+    type: String
   }
 
   # ユーザー情報を格納
   type User {
-      id: ID!
-      email: String!
-      trips: [Launch]!
+    id: ID!
+    email: String!
+    trips: [Launch]!
   }
 
   # 宇宙飛行ミッションのエンブレム
   type Mission {
-      name: String
-      missionPatch(size: PatchSize): String
+    name: String
+    missionPatch(size: PatchSize): String
   }
 
   # エンブレムのサイズ情報
@@ -54,9 +53,15 @@ const typeDefs = gql`
 
   # レスポンスが成功/失敗の状態、message、変更対象のlaunchを返す
   type TripUpdateResponse {
-      success: Boolean!
-      message: String
-      launches: [Launch]
+    success: Boolean!
+    message: String
+    launches: [Launch]
+  }
+
+  type LaunchConnection {
+    cursor: String!
+    hasMore: Boolean!
+    launches: [Launch]!
   }
 `;
 
