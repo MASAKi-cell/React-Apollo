@@ -1,3 +1,5 @@
+const { paginateResults } = require('./utils');
+
 module.exports = {
   // launches、launch、meのリゾルバーを定義
   Query: {

@@ -53,7 +53,7 @@ class LaunchAPI extends RESTDataSource {
     return {
       id: launch.flight_number || 0,
       cursor: `${launch.launch_date_unix}`,
-      site: launch.launch_site && lacunch.lacunch_site.site_name,
+      site: launch.launch_site && launch.launch_site.site_name,
       mission: {
         name: launch.mission_name,
         missionPatchSmall: launch.links.mission_patch_small,
