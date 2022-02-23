@@ -1,25 +1,35 @@
 const SQL = require("sequelize");
 
+
+// ページネーションの実装
 module.exports.paginateResults = ({
   after: cursor,
   pageSize = 20,
   results,
-  // can pass in a function to calculate an item's cursor
   getCursor = () => null,
 }) => {
-  if (pageSize < 1) return [];
 
-  if (!cursor) return results.slice(0, pageSize);
+  // 指定したページネーションの番号が１以下であれば、空の配列を返す
+  if (pageSize < 1) {
+    return [];
+  }
+
+  // cursorがない場合は、指定したページネーションの番号までを返す
+  if (!cursor) {
+    return results.slice(0, pageSize);
+  }
+
+  // cursorがある最初の要素の位置を返す
   const cursorIndex = results.findIndex((item) => {
-    // if an item has a `cursor` on it, use that, otherwise try to generate one
+
+    // データにcursorがあれば、返却なければcursorを生成する
     let itemCursor = item.cursor ? item.cursor : getCursor(item);
 
-    // if there's still not a cursor, return false by default
+    // cursorがあればtrue、なければfalseを返す
     return itemCursor ? cursor === itemCursor : false;
   });
 
-  return cursorIndex >= 0
-    ? cursorIndex === results.length - 1 // don't let us overflow
+  return cursorIndex >= 0 ? cursorIndex === results.length - 1 
       ? []
       : results.slice(
           cursorIndex + 1,

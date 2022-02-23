@@ -59,7 +59,7 @@ const typeDefs = gql`
   }
 
   type LaunchConnection {
-    cursor: String!
+    cursor: String!   # リストのどの位置にいるのかを示す
     hasMore: Boolean!
     launches: [Launch]!
   }
