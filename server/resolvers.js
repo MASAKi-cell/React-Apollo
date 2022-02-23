@@ -19,6 +19,26 @@ module.exports = {
     },
     launch: (_, { id }, { dataSources }) =>
       dataSources.launchAPI.getLaunchById({ launchId: id }),
-    me: (_, __, { dataSources }) => dataSources.userAPI.findOrCreateUser(),
+    User: {
+      trips: async (_, __, { dataSources }) => {
+        const launchIds = await dataSources.userAPI.getLaunchIdsByUser();
+
+        // 空の配列を返す
+        if(!launchIds.length) {
+          return [];
+        }
+
+        // IDから発射予定の便情報を取得
+        return dataSources.launch.getLaunchByIds(launchIds);
+
+      }
+    },
+    me: (_, __, { dataSources }) => 
+      dataSources.userAPI.findOrCreateUser(),
+    Mission: {
+      missionPatch: (Mission, { size } = { size: 'LARGE' }) => {
+        return size === 'SMALL' ? mission.missionPatchSmall : mission.missionPatchLarge;
+      }
+    }
   },
 };

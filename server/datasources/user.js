@@ -79,7 +79,7 @@ class UserAPI extends DataSource {
   }
 
   /**
-   * ログインユーザーの全ての発射予約状況を表示
+   * ログインユーザーの全てのID情報を返却
    * @returns
    */
   async getLaunchIdsByUser() {
