@@ -34,7 +34,7 @@ const typeDefs = gql`
   # 宇宙飛行ミッションのエンブレム
   type Mission {
     name: String
-    missionPatch(mission: string, size: PatchSize): String
+    missionPatch(mission: String, size: PatchSize): String
   }
 
   # エンブレムのサイズ情報
