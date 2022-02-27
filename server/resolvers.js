@@ -40,14 +40,14 @@ module.exports = {
         missionPatch: (Mission, { size } = { size: 'LARGE' }) => {
         return size === 'SMALL' ? mission.missionPatchSmall : mission.missionPatchLarge;
       }
-    }
-  },
-  Mutation: {
-    login: async (_, { email }, { dataSources }) => {
-      const user = await dataSources.userAPI.findOrCreateUser({ email });
-
-      if(user) {
-        return Buffer.from(email).toString('base64');
+    },
+    Mutation: {
+      login: async (_, { email }, { dataSources }) => {
+        const user = await dataSources.userAPI.findOrCreateUser({ email });
+  
+        if(user) {
+          return Buffer.from(email).toString('base64');
+        }
       }
     }
   }
