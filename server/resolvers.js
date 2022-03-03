@@ -67,7 +67,7 @@ module.exports = {
             success: false,
             message: 'failed to cancel trip',
           };
-    
+
         const launch = await dataSources.launchAPI.getLaunchById({ launchId });
         return {
           success: true,
